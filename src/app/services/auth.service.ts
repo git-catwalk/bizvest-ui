@@ -77,6 +77,11 @@ export class AuthService {
             }
             return Promise.reject(result);
           });
+      }).then(() => {
+        this.isDoneLoadingSubject$.next(true);
+        if (this.oauthService.state && this.oauthService.state !== 'undefined' && this.oauthService.state !== 'null') {
+          this.router.navigateByUrl(this.oauthService.state);
+        }
       })
       .catch(() => this.isDoneLoadingSubject$.next(true));
   }
@@ -87,6 +92,9 @@ export class AuthService {
   }
 
   public logout() {
+    this.oauthService.revokeTokenAndLogout(()=>{
+
+    });
     sessionStorage.clear();
     this.oauthService.logOut();
   }

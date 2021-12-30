@@ -2,12 +2,12 @@
   <mat-toolbar color="primary" >
     <mat-toolbar-row *ngIf="!isLoggedIn()">
       <mat-icon class="link" routerLink="/home" style="width: 50px; height:30px" svgIcon="app-icon"></mat-icon>
-      <h1 class="link" routerLink="/home" >YOUR APP NAME</h1>
+      <h1 class="link" routerLink="/home" >Bizvest</h1>
       <div class="flex-stretch"></div>
       <a mat-button mat-stroked-button  routerLink="/docs/intro">Docs</a>
       <!--<div class="flex-stretch"></div>-->
       <mat-divider [vertical]=true></mat-divider>
-      <a mat-button mat-stroked-button  routerLink="/login">Sign Up</a>
+      <a mat-button mat-stroked-button (click)="login()">Sign In</a>
       <mat-divider [vertical]=true></mat-divider>
       <mat-icon class="link" [matMenuTriggerFor]="dropdownMenu">more_vert</mat-icon>
       <mat-menu #dropdownMenu x-position="before">
@@ -15,7 +15,7 @@
           <mat-icon>login</mat-icon>
           <span>Login</span>
         </a>
-        <a mat-menu-item href="" routerLink="/home">
+        <a mat-menu-item href="" routerLink="/info">
           <mat-icon>info_outline</mat-icon>
           <span>About</span>
         </a>
@@ -38,11 +38,22 @@
           <mat-icon>exit_to_app</mat-icon>
           <span>Logout</span>
         </a>
-        <a mat-menu-item href="" routerLink="/home">
+        <a mat-menu-item href="" routerLink="/info">
           <mat-icon>info_outline</mat-icon>
           <span>About</span>
         </a>
       </mat-menu>
+
+      <h2 *ngIf="isLoggedIn()" [matMenuTriggerFor]="tenantMenu">{{getTenant() | async}}</h2>
+
+      <mat-menu #tenantMenu x-position="before">
+        <a mat-menu-item href="" *ngFor="let tenant of tenants" (click)="setTenant(tenant)">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>{{tenant.name}}</span>
+        </a>
+      </mat-menu>
+
+
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container>

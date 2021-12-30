@@ -23,6 +23,7 @@ import {MatCarouselModule} from "./carousel/carousel.module";
 import {OAuthModule} from "angular-oauth2-oidc";
 import {ItemFormComponent} from "./item-form/item-form.component";
 import {ItemTableComponent} from "./item-table/item-table.component";
+import { InfoViewComponent } from './info-view/info-view.component';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import {ItemTableComponent} from "./item-table/item-table.component";
     HomeComponent,
 		ItemFormComponent,
 		ItemTableComponent,
+  InfoViewComponent,
 
   ],
   imports: [

@@ -1,6 +1,6 @@
 import {Component, HostBinding} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {IconService} from "./services/icon.service";
 import {AuthGuard} from "./services/auth.guard";
 
@@ -10,6 +10,7 @@ import {ThemeService} from "./services/theme.service";
 import {OAuthService} from "angular-oauth2-oidc";
 import {authConfig} from "./services/auth.config";
 import {AuthService} from "./services/auth.service";
+import {SaasyService, Tenant} from "./services/saasy-service";
 
 @Component({
   selector: 'app-root',
@@ -20,12 +21,13 @@ export class AppComponent {
   title = 'angular-template';
   data:any | null = null;
   isDarkMode:boolean;
+  tenants:Array<Tenant> =[];
 
   @HostBinding('class') className = '';
   toggleControl = new FormControl(true);
   theme = new BehaviorSubject("dark-theme");
 
-  constructor(private oauthService: OAuthService,private authService:AuthService,private iconService:IconService,private themeService:ThemeService,private authGuard:AuthGuard,  private userProfileService : UserProfileService, private overlay: OverlayContainer) {
+  constructor(public saasyService:SaasyService,private oauthService: OAuthService,private authService:AuthService,private iconService:IconService,private themeService:ThemeService,private authGuard:AuthGuard,  private userProfileService : UserProfileService, private overlay: OverlayContainer) {
     this.iconService.registerIcons();
     themeService.initTheme();
     this.isDarkMode = themeService.isDarkMode();
@@ -33,6 +35,7 @@ export class AppComponent {
     this.authService.runInitialLoginSequence().then(u=>{
       this.data = u;
     });
+
   }
 
   ngOnInit(): void {
@@ -40,6 +43,9 @@ export class AppComponent {
       console.log(u);
       this.data = u;
     });
+    this.saasyService.listTenants().subscribe(t=>{
+      this.tenants = t;
+    })
   }
 
   onLogout($event: MouseEvent) {
@@ -52,5 +58,24 @@ export class AppComponent {
 
   isLoggedIn() {
     return this.authService.hasValidToken();
+  }
+
+
+  getTenant():Observable<string> {
+    return new Observable<string>(observer=>{
+      this.saasyService.getTenant().subscribe(t=>{
+         if(t.name){
+           observer.next(t.name);
+         }
+      });
+    });
+  }
+
+  setTenant(tenant: Tenant) {
+    this.saasyService.setTenant(tenant);
+  }
+
+  login() {
+    this.authService.login('/dashboard');
   }
 }

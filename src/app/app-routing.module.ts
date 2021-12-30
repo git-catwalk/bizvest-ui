@@ -7,13 +7,14 @@ import {AuthGuard} from "./services/auth.guard";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ItemFormComponent} from "./item-form/item-form.component";
 import {ItemTableComponent} from "./item-table/item-table.component";
+import {InfoViewComponent} from "./info-view/info-view.component";
 
 const routes: Routes = [
-		{path : 'item',     			component:ItemFormComponent},
-		{path : 'item/:id',     			component:ItemFormComponent},
-		{path : 'items',     			component:ItemTableComponent},
-
+	 {path : 'item',     			 component:ItemFormComponent,canActivate: [AuthGuard]},
+	 {path : 'item/:id',     	 component:ItemFormComponent,canActivate: [AuthGuard]},
+	 {path : 'items',     			 component:ItemTableComponent,canActivate: [AuthGuard]},
    {path : 'home',             component: HomeComponent},
+   {path : 'info',             component: InfoViewComponent},
    {path : 'login',            component: LoginComponent},
    {path : 'callback',         component: CallbackComponent},
    {path : 'dashboard',        component: DashboardComponent,canActivate: [AuthGuard]},

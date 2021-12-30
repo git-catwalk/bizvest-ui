@@ -3,11 +3,19 @@ import {HttpClient} from "@angular/common/http";
 import {Config} from "./config";
 import {BehaviorSubject, Observable} from "rxjs";
 
-
+/*
+private String username;
+	private String name;
+	private String email;
+	private Boolean active;
+	private List<String> roles;
+ */
 export interface UserProfile {
-  login: string;
+  username: string;
+  name: string;
   email:string | null;
-  avatar_url:string | null;
+  active:boolean;
+  roles:Array<string>;
 }
 
 @Injectable()
@@ -15,18 +23,21 @@ export class UserProfileService {
   constructor(public http: HttpClient, public config: Config) {
 
   }
-  //this.http.get<UserProfile>(this.config.api + "/rest/user")
+
   getUserInfo():Observable<UserProfile>{
-    return this.testUser();
+    return this.http.get<UserProfile>(this.config.api + "/rest/user")
   }
 
-  testUser():Observable<UserProfile>{
-    let user:UserProfile = {
-      login:"alex",
-      email:"alex@somwhere.com",
-      avatar_url:"/assets/svg/icons/profile.svg"
+  public static emptyUserProfile():UserProfile{
+    return {
+      username: "",
+      name: "",
+      email:"",
+      active:true,
+      roles:[]
     }
-    return new BehaviorSubject(user).asObservable();
   }
+
+
 
 }
