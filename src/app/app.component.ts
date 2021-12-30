@@ -1,4 +1,4 @@
-import {Component, HostBinding} from '@angular/core';
+import {Component, HostBinding, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {BehaviorSubject, Observable} from "rxjs";
 import {IconService} from "./services/icon.service";
@@ -17,7 +17,7 @@ import {SaasyService, Tenant} from "./services/saasy-service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent{
   title = 'angular-template';
   data:any | null = null;
   isDarkMode:boolean;
@@ -34,18 +34,10 @@ export class AppComponent {
     this.oauthService.configure(authConfig);
     this.authService.runInitialLoginSequence().then(u=>{
       this.data = u;
+      this.saasyService.listTenants().subscribe(t=>{
+        this.tenants = t;
+      });
     });
-
-  }
-
-  ngOnInit(): void {
-    this.authGuard.listenForActivateUser().subscribe(u=>{
-      console.log(u);
-      this.data = u;
-    });
-    this.saasyService.listTenants().subscribe(t=>{
-      this.tenants = t;
-    })
   }
 
   onLogout($event: MouseEvent) {
@@ -60,7 +52,6 @@ export class AppComponent {
     return this.authService.hasValidToken();
   }
 
-
   getTenant():Observable<string> {
     return new Observable<string>(observer=>{
       this.saasyService.getTenant().subscribe(t=>{
@@ -73,6 +64,7 @@ export class AppComponent {
 
   setTenant(tenant: Tenant) {
     this.saasyService.setTenant(tenant);
+    window.location.reload();
   }
 
   login() {

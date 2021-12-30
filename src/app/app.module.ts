@@ -6,7 +6,7 @@ import {SearchInputComponent} from "./search-input/search-input.component";
 import {LoginComponent} from "./login/login.component";
 import {HomeComponent} from "./home/home.component";
 import {CallbackComponent} from "./callback/callback.component";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AppRoutingModule} from "./app-routing.module";
 import {MaterialModule} from "./material-module";
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -24,6 +24,7 @@ import {OAuthModule} from "angular-oauth2-oidc";
 import {ItemFormComponent} from "./item-form/item-form.component";
 import {ItemTableComponent} from "./item-table/item-table.component";
 import { InfoViewComponent } from './info-view/info-view.component';
+import {SaasyInterceptor} from "./services/saasy-interceptor";
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { InfoViewComponent } from './info-view/info-view.component';
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})
   ],
   providers: [
-    {provide: Config, useValue: ServiceModule.forRoot(environment)}
+    {provide: Config, useValue: ServiceModule.forRoot(environment)},
+    {provide: HTTP_INTERCEPTORS, useClass: SaasyInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
